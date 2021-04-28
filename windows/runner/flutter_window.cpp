@@ -34,8 +34,23 @@ bool FlutterWindow::OnCreate() {
   
   // flutter_controller_->engine()->
   flutter::MethodChannel _channel(flutter_controller_->engine()->messenger(), _channel_name, &(flutter::StandardMethodCodec::GetInstance()));
+  auto methodCallHandler = [](const flutter::MethodCall<flutter::EncodableValue>& call,std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result){
+    if (call.method_name() == "testCase") {
+      printf("test success\n");
+      result->Success((std::string)"test success");
+      return;
+    } else {
+      result->NotImplemented();
+      return ;
+    }
+  };
+  _channel.SetMethodCallHandler(methodCallHandler);
   return true;
 }
+
+// void FlutterWindow::methodCallHandler(const flutter::MethodCall<flutter::EncodableValue>& call,std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result){
+
+// }
 
 void FlutterWindow::OnDestroy() {
   if (flutter_controller_) {
